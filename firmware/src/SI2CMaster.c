@@ -15,21 +15,21 @@ void sI2CMasterInit(GPins* pins)
 {
   pins->writeCallback(PIN_CLK, STATE_HIGH_Z);
   pins->writeCallback(PIN_DATA, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
 }
 
 void sI2CMasterRead(GPins* pins, uint8_t address, uint8_t reg, uint8_t* buffer, size_t n)
 {
   i2cStartCondition(pins);
-  _delay_ms(1);
+//  _delay_ms(1);
   i2cWriteByte(pins, ((address << 1) | WRITE_BIT));
-  _delay_ms(1);
+//  _delay_ms(1);
   i2cWriteByte(pins, reg);
-  _delay_ms(1);
+//  _delay_ms(1);
   i2cRepeatedStartCondition(pins);
-  _delay_ms(1);
+//  _delay_ms(1);
   i2cWriteByte(pins, ((address << 1) | READ_BIT));
-  _delay_ms(1);
+//  _delay_ms(1);
 
   uint8_t i;
   for(i = 0; i < n; i++)
@@ -78,30 +78,30 @@ void i2cStartCondition(GPins* pins)
 {
   pins->writeCallback(PIN_CLK, STATE_HIGH_Z);
   pins->writeCallback(PIN_DATA, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_DATA, STATE_LOW);
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_CLK, STATE_LOW);
-  _delay_ms(1);
+//  _delay_ms(1);
 }
 
 void i2cRepeatedStartCondition(GPins* pins)
 {
   pins->writeCallback(PIN_DATA, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_CLK, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
   i2cStartCondition(pins);
 }
 
 void i2cStopCondition(GPins* pins)
 {
   pins->writeCallback(PIN_DATA, STATE_LOW);
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_CLK, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_DATA, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
 }
 
 void i2cWriteBit(GPins* pins, uint8_t v)
@@ -115,33 +115,33 @@ void i2cWriteBit(GPins* pins, uint8_t v)
     pins->writeCallback(PIN_DATA, STATE_LOW);
   }
 
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_CLK, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_CLK, STATE_LOW);
-  _delay_ms(1);
+//  _delay_ms(1);
 
   if(v) 
   {
     pins->writeCallback(PIN_DATA, STATE_HIGH_Z);
   }
   
-  _delay_ms(1);
+//  _delay_ms(1);
 }
 
 bool i2cReadBit(GPins* pins)
 {
   pins->writeCallback(PIN_DATA, STATE_HIGH_Z);
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_CLK, STATE_HIGH_Z);
 
-  _delay_ms(1);
+//  _delay_ms(1);
 
   bool v = pins->readDataCallback();
-  _delay_ms(1);
+//  _delay_ms(1);
   pins->writeCallback(PIN_CLK, STATE_LOW);
 
-  _delay_ms(1);
+//  _delay_ms(1);
 
   return v;
 }
@@ -159,7 +159,7 @@ uint8_t i2cReadByte(GPins* pins, uint8_t ack)
 
   i2cWriteBit(pins, !ack);
  
-  _delay_ms(1);
+//  _delay_ms(1);
 
   return v;
 }

@@ -3,8 +3,8 @@ LINK_TARGET = testp
 OBJS =  \
 	main.o \
 
-CFLAGS = -Iinclude/ -I/usr/include/
-LIBS = -l I2CMaster -l AVRI2CBootloader -l IntelHexParser -l RGBColorSensorArray
+CFLAGS = -Iinclude/ -I/usr/include/ $(shell pkg-config --cflags opencv)
+LIBS = -l I2CMaster -l AVRI2CBootloader -l IntelHexParser -l RGBColorSensorArray $(shell pkg-config --libs opencv)
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 

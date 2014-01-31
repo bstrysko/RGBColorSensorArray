@@ -78,30 +78,38 @@ int main()
       rgbColorSensorUpdate(&s0);
       rgbColorSensorUpdate(&s1);
       rgbColorSensorUpdate(&s2);
-      _delay_ms(100);
-      _delay_ms(100);
+      //_delay_ms(100);
+      //_delay_ms(100);
     }
   }
 
   return 0;
 }
 
+#define MAX(a,b) (a > b ? a : b)
+#define MAX3(a,b,c) (MAX(MAX(a,b),c))
+
 void process(RGBColorSensor* s)
 {
   uint16_t a, r, g, b;
   rgbColorSensorI2CReadColor(&(s->pins), &a, &r, &g, &b);
 
+  a >>= 2;
   r >>= 2;
-  g >>= 2;;
+  g >>= 2;
   b >>= 2;
 
 //  r = (r >= 256) ? 255 : r;
 //  g = (g >= 256) ? 255 : g;
 //  b = (b >= 256) ? 255 : b;
 
-  s->red = (uint8_t)r;
+  uint8_t max = MAX3(r, g, b);
+
+  s->red = (uint8_t)r; //(uint8_t)r;
   s->green = (uint8_t)g;
   s->blue = (uint8_t)b;
+
+  s->defect = (s->red > 210) ? false : true;
 }
 
 size_t onI2CRead(uint8_t reg, uint8_t* buffer)

@@ -5,13 +5,17 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unistd.h>
+#include <opencv2/opencv.hpp>
 
 using namespace std;
+using namespace cv;
 
 void usage(string name);
 uint8_t stringToUInt8(char* s);
 
 #include <RGBColorSensorArray/RGBColorSensorArray.h>
+
+#define WINDOW_NAME "Colors"
 
 int main(int argc, char* argv[])
 {
@@ -42,6 +46,7 @@ int main(int argc, char* argv[])
 	assert(device.isDisabled());
 	assert(!device.isEnabled());
 
+/*
 	device.setLED0State(ENABLED);
 	assert(device.getLED0State() == ENABLED);
 
@@ -66,28 +71,52 @@ int main(int argc, char* argv[])
 
 	device.setLED2State(ENABLED);
 	assert(device.getLED2State() == ENABLED);
+*/
 
-	device.setLED0State(DISABLED);
-	device.setLED1State(DISABLED);
-	device.setLED2State(DISABLED);
+	LEDState s = ENABLED;
+	device.setLED0State(s);
+	device.setLED1State(s);
+	device.setLED2State(s);
 
 	device.enable();
 	assert(device.isEnabled());
 
+	namedWindow(WINDOW_NAME, 1);
+
+	Mat m[3];
+	m[0] = Mat(200, 200, CV_8UC3, Scalar::all(0));
+	m[1] = Mat(200, 200, CV_8UC3, Scalar::all(0));
+	m[2] = Mat(200, 200, CV_8UC3, Scalar::all(0));
+	Mat result(2*m[0].rows, 2*m[0].cols, m[0].type());
+
 	while(true)
 	{
-		//system("clear");
-
 		vector<RGBColorSensor> data = device.getData();
 
 		for(size_t i =0; i < data.size(); i++)
 		{
 			RGBColorSensor s = data[i];
+			Color c = s.getColor();
+			m[i] = Scalar(c.getBlue(), c.getGreen(), c.getRed());
+
+			if(s.isDefect())
+			{
+				ostringstream t;
+				t << "DEFECT";
+				putText(m[i], t.str(), Point(20,40), FONT_HERSHEY_SIMPLEX, 1, Scalar(0, 255, 0, 200), 1, CV_AA);
+			}
+
 			cout << s << "\t"; //<< endl;
 		}
 		cout << endl;
 
-		usleep(5000);
+		m[1].copyTo(result(Rect(0, 0, m[0].cols, m[0].rows)));
+		m[0].copyTo(result(Rect(m[0].cols, 0, m[0].cols, m[0].rows)));
+		m[2].copyTo(result(Rect(0, m[0].rows, m[0].cols, m[0].rows)));
+		imshow(WINDOW_NAME, result);
+		
+		waitKey(2);
+		//usleep(5000);
 	}
 
 	return 0;
