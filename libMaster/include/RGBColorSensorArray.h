@@ -12,10 +12,10 @@ using namespace std;
 
 enum LEDState
 {
-  ENABLED,
-  DISABLED,
-  BLINK,
-  UNDEFINED
+  ENABLED = 1,
+  DISABLED = 0,
+  BLINK = 2,
+  UNDEFINED = 3
 };
 
 class RGBColorSensorArray : public I2CDeviceBootable

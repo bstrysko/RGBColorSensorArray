@@ -7,27 +7,10 @@ RGBColorSensorArray::RGBColorSensorArray(I2CBus* bus, uint8_t address) : I2CDevi
 LEDState RGBColorSensorArray::getLEDState(uint8_t i)
 {
 	uint8_t v = i2cRead8(RGB_COLOR_SENSOR_ARRAY_REGISTER_LEDS);
-	v = (v >> (2*i)) & 0xFF;
+	v = (v >> (2*i)) & 0x3;
 
-	switch(v)
-	{
-		case 0:
-		{
-			return DISABLED;
-		}
-		case 1:
-		{
-			return ENABLED;
-		}
-		case 2:
-		{
-			return BLINK;
-		}
-		default:
-		{
-			return UNDEFINED;
-		}
-	}
+	LEDState state = static_cast<LEDState>(v);
+	return state;
 }
 
 void RGBColorSensorArray::setLEDState(uint8_t i, LEDState state)
@@ -57,10 +40,12 @@ void RGBColorSensorArray::setLEDState(uint8_t i, LEDState state)
 			break;
 		}
 	}
-
-	v = v << (2*i);
+	
+	uint8_t r = (0x3F ^ (0x3 << (2*i)));
+	v = (v << (2*i));
+	r |= v;
 	i2cWrite8(RGB_COLOR_SENSOR_ARRAY_REGISTER_LEDS,
-		8
+		r
 	);
 }
  
