@@ -2,7 +2,6 @@
 
 void LED_OFF(RGBColorSensor* s);
 void LED_ON(RGBColorSensor* s);
-void LED_TOGGLE(RGBColorSensor* s);
 
 void rgbColorSensorInit
 (
@@ -74,7 +73,14 @@ void rgbColorSensorToggleLEDState(RGBColorSensor* s)
 {
   if(s->ledToggle)
   {
-    LED_TOGGLE(s);
+    if(s->ledOn)
+    {
+      LED_OFF(s);
+    }
+    else
+    {
+      LED_ON(s);
+    }
   }
 }
 
@@ -94,16 +100,3 @@ void LED_ON(RGBColorSensor* s)
   s->ledOn = true;
   s->writeCallback(PIN_LED, STATE_HIGH_Z);
 }
-
-void LED_TOGGLE(RGBColorSensor* s)
-{
-  if(s->ledOn)
-  {
-    LED_OFF(s);
-  }
-  else
-  {
-    LED_ON(s);
-  }
-}
-

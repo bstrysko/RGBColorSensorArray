@@ -40,7 +40,10 @@ bool sensor2ReadDataCallback();
 void sensor2WriteCallback(uint8_t pin, uint8_t state);
 
 volatile bool enabled;
-RGBColorSensor s0, s1, s2;
+
+#define s0 (*(RGBColorSensor*)0x144)
+#define s1 (*(RGBColorSensor*)0x154)
+#define s2 (*(RGBColorSensor*)0x164)
 
 int main()
 {
@@ -136,9 +139,10 @@ void onI2CWrite(uint8_t reg, uint8_t* buffer, size_t bufferSize)
     {
       if(!enabled)
       {
-	uint8_t l0 = (buffer[0] & 0x3);
-	uint8_t l1 = ((buffer[0] >> 2) & 0x3);
-	uint8_t l2 = ((buffer[0] >> 4) & 0x3);
+	int v = buffer[0];
+	uint8_t l0 = (v & 0x3);
+	uint8_t l1 = ((v >> 2) & 0x3);
+	uint8_t l2 = ((v >> 4) & 0x3);
 
 	rgbColorSensorSetLEDState(&s0, l0); 
 	rgbColorSensorSetLEDState(&s1, l1);

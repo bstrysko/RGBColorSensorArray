@@ -41,7 +41,7 @@ void RGBColorSensorArray::setLEDState(uint8_t i, LEDState state)
 		}
 	}
 	
-	uint8_t r = (0x3F ^ (0x3 << (2*i)));
+	uint8_t r = (0x3F ^ (0x03 << (2*i)));
 	v = (v << (2*i));
 	r |= v;
 	i2cWrite8(RGB_COLOR_SENSOR_ARRAY_REGISTER_LEDS,
@@ -62,7 +62,6 @@ bool RGBColorSensorArray::isDisabled()
 		i2cRead8(RGB_COLOR_SENSOR_ARRAY_REGISTER_STATUS) & 0x1
 	);
 }
-
 
 vector<RGBColorSensor> RGBColorSensorArray::getData()
 {

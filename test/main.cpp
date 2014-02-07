@@ -40,8 +40,15 @@ int main(int argc, char* argv[])
 	assert(device.isDisabled());
 	assert(!device.isEnabled());
 
-	device.setLED0State(DISABLED);
-	assert(device.getLED0State() == DISABLED);
+	device.setLED0State(ENABLED);
+	assert(device.getLED0State() == ENABLED);
+
+	device.setLED1State(DISABLED);
+	assert(device.getLED1State() == DISABLED);
+
+	device.setLED2State(ENABLED);
+	assert(device.getLED2State() == ENABLED);
+
 	device.setLED0State(ENABLED);
 	assert(device.getLED0State() == ENABLED);
 
@@ -52,17 +59,12 @@ int main(int argc, char* argv[])
 	device.setLED2State(DISABLED);
 	assert(device.getLED2State() == DISABLED);
 	
-
 	device.setLED1State(BLINK);
 	assert(device.getLED1State() == BLINK);
 
-	device.setLED2State(DISABLED);
-	assert(device.getLED2State() == DISABLED);
-
-	device.setLED0State(DISABLED);
-	device.setLED1State(DISABLED);
-	device.setLED2State(DISABLED);
-
+	device.setLED2State(ENABLED);
+	assert(device.getLED2State() == ENABLED);
+	
 	return 0;
 }
 
