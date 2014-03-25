@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "RGBColorSensorPins.h"
+#include "RGBColorSensorI2C.h"
 
 #define LED_STATE_OFF 0
 #define LED_STATE_ON 1
@@ -12,8 +13,7 @@
 
 typedef struct
 {
-  RGBColorSensorReadDataCallback readDataCallback;
-  RGBColorSensorWriteCallback writeCallback;
+  RGBColorSensorPins pins;
   bool ledToggle;
   bool ledOn;
 } RGBColorSensor;

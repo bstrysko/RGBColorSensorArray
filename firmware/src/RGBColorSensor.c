@@ -10,8 +10,9 @@ void rgbColorSensorInit
   RGBColorSensorWriteCallback writeCallback
 )
 {
-  s->readDataCallback = readDataCallback;
-  s->writeCallback = writeCallback;
+  s->pins.readDataCallback = readDataCallback;
+  s->pins.writeCallback = writeCallback;
+  rgbColorSensorI2CInit(&(s->pins));
   rgbColorSensorSetLEDState(s, LED_STATE_OFF);
 }
 
@@ -92,11 +93,11 @@ void rgbColorSensorUpdate(RGBColorSensor* s)
 void LED_OFF(RGBColorSensor* s)
 {
   s->ledOn = false;
-  s->writeCallback(PIN_LED, STATE_LOW);
+  s->pins.writeCallback(PIN_LED, STATE_LOW);
 }
 
 void LED_ON(RGBColorSensor* s)
 {
   s->ledOn = true;
-  s->writeCallback(PIN_LED, STATE_HIGH_Z);
+  s->pins.writeCallback(PIN_LED, STATE_HIGH_Z);
 }

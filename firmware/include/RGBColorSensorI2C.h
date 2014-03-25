@@ -7,7 +7,7 @@
 #include <util/delay.h>
 
 void rgbColorSensorI2CInit(RGBColorSensorPins* pins);
-size_t rgbColorSensorI2CRead(RGBColorSensorPins* pins, uint8_t* buffer, size_t n);
-size_t rgbColorSensorI2CWrite(RGBColorSensorPins* pins, uint8_t* buffer, size_t n);
+size_t rgbColorSensorI2CRead(RGBColorSensorPins* pins, uint8_t reg, uint8_t* buffer, size_t n);
+size_t rgbColorSensorI2CWrite(RGBColorSensorPins* pins, uint8_t reg, uint8_t* buffer, size_t n);
 
 #endif

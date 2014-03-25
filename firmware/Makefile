@@ -7,7 +7,7 @@ F_CPU=8000000
 
 FLAGS=-mmcu=$(MCU) -DF_CPU=$(F_CPU)UL -Os -Wall -Wl,--section-start=.data=0x800174 -I/usr/include/ -I./include/ -L/usr/lib/AVRI2CBootloader/ -lAVRI2CBootloaderAVR -Wl,-u,tag_TWI
 
-SRC= src/RGBColorSensor.c main.c
+SRC= src/RGBColorSensorI2C.c src/RGBColorSensor.c main.c
 HDR=
 
 all: $(NAME).hex
@@ -25,4 +25,4 @@ disasm:
 	avr-objdump -s -m avr5 -D $(NAME).hex
 
 flash:
-	sudo i2cAVRFlash application.hex 1 64
+	sudo i2cAVRFlash application.hex 1 80
