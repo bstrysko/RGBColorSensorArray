@@ -124,7 +124,11 @@ size_t onI2CRead(uint8_t reg, uint8_t* buffer)
     case 0x15:
     {
       //TODO:
-      buffer[0] = rgbColorSensorI2CRead(&(s0.pins), 0x12, &buffer[1], 1);
+      uint8_t v;
+      uint8_t n = rgbColorSensorI2CRead(&(s0.pins), 0x12, &v, 1);
+      buffer[0] = n;
+      buffer[1] = v;
+
       return 2;
     }
   }
@@ -162,7 +166,7 @@ void onI2CWrite(uint8_t reg, uint8_t* buffer, size_t bufferSize)
 
 bool sensorReadDataCallback(uint8_t m)
 {
-  return !(!(PORTC & m));
+  return !(!(PIND & m));
 }
 
 void sensorWriteCallback(uint8_t pin, uint8_t state, uint8_t m)

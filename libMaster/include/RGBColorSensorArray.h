@@ -38,6 +38,8 @@ class RGBColorSensorArray : public I2CDeviceBootable
     void setLED0State(LEDState state);
     void setLED1State(LEDState state);
     void setLED2State(LEDState state);
+
+    size_t getReg();
 };
 
 #endif

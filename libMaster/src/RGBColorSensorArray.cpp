@@ -124,3 +124,8 @@ void RGBColorSensorArray::setLED2State(LEDState state)
 {
 	setLEDState(2, state);	
 }
+
+size_t RGBColorSensorArray::getReg()
+{
+	return i2cRead16(0x15);
+}

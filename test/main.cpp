@@ -36,6 +36,7 @@ int main(int argc, char* argv[])
 		cout << "Device in application mode..." << endl;
 	}
 
+/*
 	device.disable();
 	assert(device.isDisabled());
 	assert(!device.isEnabled());
@@ -64,7 +65,17 @@ int main(int argc, char* argv[])
 
 	device.setLED2State(ENABLED);
 	assert(device.getLED2State() == ENABLED);
-	
+*/
+	device.setLED0State(DISABLED);
+	device.setLED1State(DISABLED);
+	device.setLED2State(DISABLED);
+
+	size_t r = device.getReg();
+	uint8_t a = r & 0xFF;
+	uint8_t b = (r >> 8) & 0xFF;
+
+	cout << (size_t)a << " | " << (size_t)b << endl;
+
 	return 0;
 }
 

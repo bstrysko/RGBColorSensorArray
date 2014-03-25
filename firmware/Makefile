@@ -25,4 +25,4 @@ disasm:
 	avr-objdump -s -m avr5 -D $(NAME).hex
 
 flash:
-	sudo i2cAVRFlash application.hex 1 80
+	sudo i2cAVRFlash application.hex 1 64
