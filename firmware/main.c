@@ -78,6 +78,8 @@ int main()
       rgbColorSensorUpdate(&s0);
       rgbColorSensorUpdate(&s1);
       rgbColorSensorUpdate(&s2);
+      _delay_ms(100);
+      _delay_ms(100);
     }
   }
 

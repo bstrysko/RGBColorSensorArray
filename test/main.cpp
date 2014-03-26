@@ -76,17 +76,18 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
-		system("clear");
+		//system("clear");
 
 		vector<RGBColorSensor> data = device.getData();
 
 		for(size_t i =0; i < data.size(); i++)
 		{
 			RGBColorSensor s = data[i];
-			cout << s << endl;
+			cout << s << "\t"; //<< endl;
 		}
+		cout << endl;
 
-		usleep(50000);
+		usleep(5000);
 	}
 
 	return 0;
