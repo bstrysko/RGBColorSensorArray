@@ -22,4 +22,4 @@ $(LINK_TARGET) : $(OBJS)
 	g++ $(CFLAGS) -g -o $@ -c $< $(LIBS)
 
 test:
-	sudo ./testp 1 64
+	sudo ./testp 1 80

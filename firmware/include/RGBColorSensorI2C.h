@@ -1,13 +1,13 @@
 #ifndef _RGB_COLOR_SENSOR_ARRAY_RGB_COLOR_SENSOR_I2C_H_
 #define _RGB_COLOR_SENSOR_ARRAY_RGB_COLOR_SENSOR_I2C_H_
 
-#include "RGBColorSensorPins.h"
+#include "SI2CMaster.h"
 
-#include <stddef.h>
 #include <util/delay.h>
 
-void rgbColorSensorI2CInit(RGBColorSensorPins* pins);
-size_t rgbColorSensorI2CRead(RGBColorSensorPins* pins, uint8_t reg, uint8_t* buffer, size_t n);
-size_t rgbColorSensorI2CWrite(RGBColorSensorPins* pins, uint8_t reg, uint8_t* buffer, size_t n);
+void rgbColorSensorI2CInit(GPins* pins);
+
+uint8_t rgbColorSensorI2CReadID(GPins* pins);
+void rgbColorSensorI2CReadColor(GPins* pins, uint16_t* a, uint16_t* r, uint16_t* g, uint16_t* b);
 
 #endif

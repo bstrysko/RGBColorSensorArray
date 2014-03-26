@@ -13,6 +13,8 @@ class RGBColorSensor
 
     Color getColor();
     bool isDefect();
+
+    friend ostream& operator<<(ostream& os, const RGBColorSensor& rhs);
 };
 
 #endif

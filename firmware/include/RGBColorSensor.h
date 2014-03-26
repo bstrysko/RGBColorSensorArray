@@ -4,25 +4,35 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#include "RGBColorSensorPins.h"
+#include "GPins.h"
 #include "RGBColorSensorI2C.h"
 
 #define LED_STATE_OFF 0
 #define LED_STATE_ON 1
 #define LED_STATE_TOGGLE 2
 
-typedef struct
+typedef struct RGBColorSensor_t RGBColorSensor;
+
+typedef void (*RGBColorSensorProcessCallback)(RGBColorSensor* s);
+
+struct RGBColorSensor_t
 {
-  RGBColorSensorPins pins;
+  GPins pins;
+  RGBColorSensorProcessCallback processCallback;
   bool ledToggle;
-  bool ledOn;
-} RGBColorSensor;
+  bool ledOn; 
+  bool defect;
+  uint8_t red;
+  uint8_t green;
+  uint8_t blue;
+};
 
 void rgbColorSensorInit
 (
   RGBColorSensor* s,
-  RGBColorSensorReadDataCallback readDataCallback,
-  RGBColorSensorWriteCallback writeCallback
+  GPinsReadDataCallback readDataCallback,
+  GPinsWriteCallback writeCallback,
+  RGBColorSensorProcessCallback processCallback
 );
 
 uint8_t rgbColorSensorGetRed(RGBColorSensor* s);

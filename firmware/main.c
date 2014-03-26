@@ -22,7 +22,7 @@
 #define SENSOR2_DATA 2
 #define SENSOR2_LED 2
 
-void delay1Second();
+void process(RGBColorSensor* s);
 
 /*
  * BeagleBone Black callbacks
@@ -39,20 +39,22 @@ void sensor1WriteCallback(uint8_t pin, uint8_t state);
 bool sensor2ReadDataCallback();
 void sensor2WriteCallback(uint8_t pin, uint8_t state);
 
+void delay1Second();
+
 volatile bool enabled;
 
 #define s0 (*(RGBColorSensor*)0x144)
-#define s1 (*(RGBColorSensor*)0x154)
-#define s2 (*(RGBColorSensor*)0x164)
+#define s1 (*(RGBColorSensor*)0x164)
+#define s2 (*(RGBColorSensor*)0x184)
 
 int main()
 {
   I2CCallbacks.onReadFunction = onI2CRead;
   I2CCallbacks.onWriteFunction = onI2CWrite;
 
-  rgbColorSensorInit(&s0, sensor0ReadDataCallback, sensor0WriteCallback);
-  rgbColorSensorInit(&s1, sensor1ReadDataCallback, sensor1WriteCallback);
-  rgbColorSensorInit(&s2, sensor2ReadDataCallback, sensor2WriteCallback);
+  rgbColorSensorInit(&s0, sensor0ReadDataCallback, sensor0WriteCallback, process);
+  rgbColorSensorInit(&s1, sensor1ReadDataCallback, sensor1WriteCallback, process);
+  rgbColorSensorInit(&s2, sensor2ReadDataCallback, sensor2WriteCallback, process);
 
   enabled = false;
 
@@ -80,6 +82,24 @@ int main()
   }
 
   return 0;
+}
+
+void process(RGBColorSensor* s)
+{
+  uint16_t a, r, g, b;
+  rgbColorSensorI2CReadColor(&(s->pins), &a, &r, &g, &b);
+
+  r >>= 2;
+  g >>= 2;;
+  b >>= 2;
+
+//  r = (r >= 256) ? 255 : r;
+//  g = (g >= 256) ? 255 : g;
+//  b = (b >= 256) ? 255 : b;
+
+  s->red = (uint8_t)r;
+  s->green = (uint8_t)g;
+  s->blue = (uint8_t)b;
 }
 
 size_t onI2CRead(uint8_t reg, uint8_t* buffer)
@@ -120,16 +140,6 @@ size_t onI2CRead(uint8_t reg, uint8_t* buffer)
       buffer[0] = (l2 << 4) | (l1 << 2) | (l0);
 
       return 1;
-    }
-    case 0x15:
-    {
-      //TODO:
-      uint8_t v;
-      uint8_t n = rgbColorSensorI2CRead(&(s0.pins), 0x12, &v, 1);
-      buffer[0] = n;
-      buffer[1] = v;
-
-      return 2;
     }
   }
 
