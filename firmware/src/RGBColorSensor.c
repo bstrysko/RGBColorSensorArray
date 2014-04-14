@@ -7,39 +7,18 @@ void rgbColorSensorInit
 (
   RGBColorSensor* s,
   GPinsReadDataCallback readDataCallback,
-  GPinsWriteCallback writeCallback,
-  RGBColorSensorProcessCallback processCallback
+  GPinsWriteCallback writeCallback
 )
 {
   s->pins.readDataCallback = readDataCallback;
   s->pins.writeCallback = writeCallback;
-  s->processCallback = processCallback;
   rgbColorSensorI2CInit(&(s->pins));
   rgbColorSensorSetLEDState(s, LED_STATE_OFF);
-  s->defect = false;
-  s->red = 0;
-  s->green = 0;
-  s->blue = 0;
 }
 
-uint8_t rgbColorSensorGetRed(RGBColorSensor* s)
+void rgbColorSensorReadColor(RGBColorSensor* s, uint16_t* a, uint16_t* r, uint16_t* g, uint16_t* b)
 {
-  return s->red;
-}
-
-uint8_t rgbColorSensorGetGreen(RGBColorSensor* s)
-{
-  return s->green;
-}
-
-uint8_t rgbColorSensorGetBlue(RGBColorSensor* s)
-{
-  return s->blue;
-}
-
-bool rgbColorSensorGetDefect(RGBColorSensor* s)
-{
-  return s->defect;
+  rgbColorSensorI2CReadColor(&(s->pins), a, r, g, b);
 }
 
 uint8_t rgbColorSensorGetLEDState(RGBColorSensor* s)
@@ -85,11 +64,6 @@ void rgbColorSensorToggleLEDState(RGBColorSensor* s)
       LED_ON(s);
     }
   }
-}
-
-void rgbColorSensorUpdate(RGBColorSensor* s)
-{
-  s->processCallback(s);
 }
 
 void LED_OFF(RGBColorSensor* s)

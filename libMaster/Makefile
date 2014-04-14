@@ -3,7 +3,6 @@ LNAME = RGBColorSensorArray
 # Source Files
 SRC = \
 	src/Color.cpp \
-	src/RGBColorSensor.cpp \
 	src/RGBColorSensorArray.cpp
 
 OBJ = $(SRC:.cpp=.o)

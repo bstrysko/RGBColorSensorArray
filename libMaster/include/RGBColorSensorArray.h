@@ -3,7 +3,7 @@
 
 #include <AVRI2CBootloader/I2CDeviceBootable.h>
 
-#include "RGBColorSensor.h"
+#include "Color.h"
 #include "RGBColorSensorArrayRegisters.h"
 
 #include <vector>
@@ -28,7 +28,7 @@ class RGBColorSensorArray : public I2CDeviceBootable
 
     bool isEnabled();
     bool isDisabled();
-    vector<RGBColorSensor> getData();
+    vector<Color> getData();
     LEDState getLED0State();
     LEDState getLED1State();
     LEDState getLED2State();

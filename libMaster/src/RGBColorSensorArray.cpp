@@ -2,6 +2,7 @@
 
 RGBColorSensorArray::RGBColorSensorArray(I2CBus* bus, uint8_t address) : I2CDeviceBootable(bus, address)
 {
+	enterApplicationMode();
 }
 
 LEDState RGBColorSensorArray::getLEDState(uint8_t i)
@@ -63,24 +64,16 @@ bool RGBColorSensorArray::isDisabled()
 	);
 }
 
-vector<RGBColorSensor> RGBColorSensorArray::getData()
+vector<Color> RGBColorSensorArray::getData()
 {
-	uint8_t buffer[10];
-	i2cRead(RGB_COLOR_SENSOR_ARRAY_REGISTER_DATA, buffer, 10);
+	uint16_t buffer[12];
+	i2cRead(RGB_COLOR_SENSOR_ARRAY_REGISTER_DATA, (uint8_t*)buffer, 24);
 
-	vector<RGBColorSensor> data;
+	vector<Color> data;
 
-	Color c0 = Color(buffer[0], buffer[1], buffer[2]);
-	bool d0 = (buffer[9] & 0x1) ? true : false;
-	data.push_back(RGBColorSensor(c0, d0));
-
-	Color c1 = Color(buffer[3], buffer[4], buffer[5]);
-	bool d1 = (buffer[9] & 0x2) ? true : false;
-	data.push_back(RGBColorSensor(c1, d1));
-
-	Color c2 = Color(buffer[6], buffer[7], buffer[8]);
-	bool d2 = (buffer[9] & 0x4) ? true : false;
-	data.push_back(RGBColorSensor(c2, d2));
+	data.push_back(Color(buffer[0], buffer[1], buffer[2], buffer[3]));
+	data.push_back(Color(buffer[4], buffer[5], buffer[6], buffer[7]));
+	data.push_back(Color(buffer[8], buffer[9], buffer[10], buffer[11]));
 
 	return data;
 }

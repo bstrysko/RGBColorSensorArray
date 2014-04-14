@@ -46,33 +46,6 @@ int main(int argc, char* argv[])
 	assert(device.isDisabled());
 	assert(!device.isEnabled());
 
-/*
-	device.setLED0State(ENABLED);
-	assert(device.getLED0State() == ENABLED);
-
-	device.setLED1State(DISABLED);
-	assert(device.getLED1State() == DISABLED);
-
-	device.setLED2State(ENABLED);
-	assert(device.getLED2State() == ENABLED);
-
-	device.setLED0State(ENABLED);
-	assert(device.getLED0State() == ENABLED);
-
-	device.setLED0State(DISABLED);
-	assert(device.getLED0State() == DISABLED);
-	device.setLED1State(DISABLED);
-	assert(device.getLED1State() == DISABLED);
-	device.setLED2State(DISABLED);
-	assert(device.getLED2State() == DISABLED);
-	
-	device.setLED1State(BLINK);
-	assert(device.getLED1State() == BLINK);
-
-	device.setLED2State(ENABLED);
-	assert(device.getLED2State() == ENABLED);
-*/
-
 	LEDState s = ENABLED;
 	device.setLED0State(s);
 	device.setLED1State(s);
@@ -91,27 +64,50 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
-		vector<RGBColorSensor> data = device.getData();
+		vector<Color> data = device.getData();
 
 		for(size_t i =0; i < data.size(); i++)
 		{
-			RGBColorSensor s = data[i];
-			Color c = s.getColor();
-			m[i] = Scalar(c.getBlue(), c.getGreen(), c.getRed());
+			Color c = data[i];
 
+			double alpha = (double)c.getAlpha();
+			double red = (double)c.getRed();
+			double green = (double)c.getGreen();
+			double blue = (double)c.getBlue();
+
+			red /= alpha;
+			green /= alpha;
+			blue /= alpha;
+
+			cout << red << ", " << green << ", " << blue << endl;
+
+			green *= 1.05;
+			blue *= 1.55;
+
+			cout << red << ", " << green << ", " << blue << endl;
+
+			red *= 255.0;
+			green *= 255.0;
+			blue *= 255.0;
+
+			cout << red << ", " << green << ", " << blue << endl;
+
+			m[i] = Scalar((uint32_t)blue, (uint32_t)green, (uint32_t)red);
+
+/*
 			if(s.isDefect())
 			{
 				ostringstream t;
 				t << "DEFECT";
-				putText(m[i], t.str(), Point(20,40), FONT_HERSHEY_SIMPLEX, 1, Scalar(0, 255, 0, 200), 1, CV_AA);
+				putText(m[i], t.str(), Point(20,40), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 255, 0), 1, CV_AA);
 			}
-
-			cout << s << "\t"; //<< endl;
+*/
+			cout << c << endl;//"\t";
 		}
 		cout << endl;
 
-		m[1].copyTo(result(Rect(0, 0, m[0].cols, m[0].rows)));
-		m[0].copyTo(result(Rect(m[0].cols, 0, m[0].cols, m[0].rows)));
+		m[0].copyTo(result(Rect(0, 0, m[0].cols, m[0].rows)));
+		m[1].copyTo(result(Rect(m[0].cols, 0, m[0].cols, m[0].rows)));
 		m[2].copyTo(result(Rect(0, m[0].rows, m[0].cols, m[0].rows)));
 		imshow(WINDOW_NAME, result);
 		

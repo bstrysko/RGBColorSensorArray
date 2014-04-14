@@ -22,8 +22,6 @@
 #define SENSOR2_DATA 2
 #define SENSOR2_LED 2
 
-void process(RGBColorSensor* s);
-
 /*
  * BeagleBone Black callbacks
  */
@@ -52,9 +50,9 @@ int main()
   I2CCallbacks.onReadFunction = onI2CRead;
   I2CCallbacks.onWriteFunction = onI2CWrite;
 
-  rgbColorSensorInit(&s0, sensor0ReadDataCallback, sensor0WriteCallback, process);
-  rgbColorSensorInit(&s1, sensor1ReadDataCallback, sensor1WriteCallback, process);
-  rgbColorSensorInit(&s2, sensor2ReadDataCallback, sensor2WriteCallback, process);
+  rgbColorSensorInit(&s0, sensor0ReadDataCallback, sensor0WriteCallback);
+  rgbColorSensorInit(&s1, sensor1ReadDataCallback, sensor1WriteCallback);
+  rgbColorSensorInit(&s2, sensor2ReadDataCallback, sensor2WriteCallback);
 
   enabled = false;
 
@@ -73,43 +71,9 @@ int main()
       rgbColorSensorToggleLEDState(&s1);
       rgbColorSensorToggleLEDState(&s2); 
     }
-    else
-    {
-      rgbColorSensorUpdate(&s0);
-      rgbColorSensorUpdate(&s1);
-      rgbColorSensorUpdate(&s2);
-      //_delay_ms(100);
-      //_delay_ms(100);
-    }
   }
 
   return 0;
-}
-
-#define MAX(a,b) (a > b ? a : b)
-#define MAX3(a,b,c) (MAX(MAX(a,b),c))
-
-void process(RGBColorSensor* s)
-{
-  uint16_t a, r, g, b;
-  rgbColorSensorI2CReadColor(&(s->pins), &a, &r, &g, &b);
-
-  a >>= 2;
-  r >>= 2;
-  g >>= 2;
-  b >>= 2;
-
-//  r = (r >= 256) ? 255 : r;
-//  g = (g >= 256) ? 255 : g;
-//  b = (b >= 256) ? 255 : b;
-
-  uint8_t max = MAX3(r, g, b);
-
-  s->red = (uint8_t)r; //(uint8_t)r;
-  s->green = (uint8_t)g;
-  s->blue = (uint8_t)b;
-
-  s->defect = (s->red > 210) ? false : true;
 }
 
 size_t onI2CRead(uint8_t reg, uint8_t* buffer)
@@ -123,23 +87,13 @@ size_t onI2CRead(uint8_t reg, uint8_t* buffer)
     }
     case RGB_COLOR_SENSOR_ARRAY_REGISTER_DATA:
     {
-      buffer[0] = rgbColorSensorGetRed(&s0);
-      buffer[1] = rgbColorSensorGetGreen(&s0);
-      buffer[2] = rgbColorSensorGetBlue(&s0);
-      buffer[3] = rgbColorSensorGetRed(&s1);
-      buffer[4] = rgbColorSensorGetGreen(&s1);
-      buffer[5] = rgbColorSensorGetBlue(&s1);
-      buffer[6] = rgbColorSensorGetRed(&s2);
-      buffer[7] = rgbColorSensorGetGreen(&s2);
-      buffer[8] = rgbColorSensorGetBlue(&s2);
+      uint16_t* buf = (uint16_t*)buffer;
 
-      uint8_t d0 = rgbColorSensorGetDefect(&s0);
-      uint8_t d1 = rgbColorSensorGetDefect(&s1);
-      uint8_t d2 = rgbColorSensorGetDefect(&s2);
+      rgbColorSensorReadColor(&s0, &buf[0], &buf[1], &buf[2], &buf[3]);
+      rgbColorSensorReadColor(&s1, &buf[4], &buf[5], &buf[6], &buf[7]);
+      rgbColorSensorReadColor(&s2, &buf[8], &buf[9], &buf[10], &buf[11]);
 
-      buffer[9] = (d2 << 2) | (d1 << 1) | (d0);
-
-      return 10;
+      return 24;
     }
     case RGB_COLOR_SENSOR_ARRAY_REGISTER_LEDS:
     {

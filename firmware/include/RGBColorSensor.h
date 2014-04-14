@@ -13,35 +13,23 @@
 
 typedef struct RGBColorSensor_t RGBColorSensor;
 
-typedef void (*RGBColorSensorProcessCallback)(RGBColorSensor* s);
-
 struct RGBColorSensor_t
 {
   GPins pins;
-  RGBColorSensorProcessCallback processCallback;
   bool ledToggle;
   bool ledOn; 
-  bool defect;
-  uint8_t red;
-  uint8_t green;
-  uint8_t blue;
 };
 
 void rgbColorSensorInit
 (
   RGBColorSensor* s,
   GPinsReadDataCallback readDataCallback,
-  GPinsWriteCallback writeCallback,
-  RGBColorSensorProcessCallback processCallback
+  GPinsWriteCallback writeCallback
 );
 
-uint8_t rgbColorSensorGetRed(RGBColorSensor* s);
-uint8_t rgbColorSensorGetGreen(RGBColorSensor* s);
-uint8_t rgbColorSensorGetBlue(RGBColorSensor* s);
-bool rgbColorSensorGetDefect(RGBColorSensor* s);
+void rgbColorSensorReadColor(RGBColorSensor* s, uint16_t* a, uint16_t* r, uint16_t* g, uint16_t* b);
 uint8_t rgbColorSensorGetLEDState(RGBColorSensor* s);
 void rgbColorSensorSetLEDState(RGBColorSensor* s, uint8_t state);
 void rgbColorSensorToggleLEDState(RGBColorSensor* s);
-void rgbColorSensorUpdate(RGBColorSensor* s);
 
 #endif
