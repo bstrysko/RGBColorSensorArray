@@ -23,6 +23,7 @@ class RGBColorSensorArray : public I2CDeviceBootable
   private:
     LEDState getLEDState(uint8_t i);
     void setLEDState(uint8_t i, LEDState state);
+    void processData(uint16_t* a, uint16_t* r, uint16_t* g, uint16_t* b);
   public:
     RGBColorSensorArray(I2CBus* bus, uint8_t address);
 

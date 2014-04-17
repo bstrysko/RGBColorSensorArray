@@ -64,10 +64,38 @@ bool RGBColorSensorArray::isDisabled()
 	);
 }
 
+void RGBColorSensorArray::processData(uint16_t* a, uint16_t* r, uint16_t* g, uint16_t* b)
+{
+	double alpha = (double)(*a);
+	double red = (double)(*r);
+	double green = (double)(*g);
+	double blue = (double)(*b);
+
+	red /= alpha;
+	green /= alpha;
+	blue /= alpha;
+
+	green *= 1.05;
+	blue *= 1.55;
+
+	red *= 255.0;
+	green *= 255.0;
+	blue *= 255.0;
+
+	(*a) = alpha;
+	(*r) = red;
+	(*g) = green;
+	(*b) = blue;
+}
+
 vector<Color> RGBColorSensorArray::getData()
 {
 	uint16_t buffer[12];
 	i2cRead(RGB_COLOR_SENSOR_ARRAY_REGISTER_DATA, (uint8_t*)buffer, 24);
+
+	processData(&buffer[0], &buffer[1], &buffer[2], &buffer[3]);
+	processData(&buffer[4], &buffer[5], &buffer[6], &buffer[7]);
+	processData(&buffer[8], &buffer[9], &buffer[10], &buffer[11]);
 
 	vector<Color> data;
 

@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 		for(size_t i =0; i < data.size(); i++)
 		{
 			Color c = data[i];
-
+/*
 			double alpha = (double)c.getAlpha();
 			double red = (double)c.getRed();
 			double green = (double)c.getGreen();
@@ -91,19 +91,19 @@ int main(int argc, char* argv[])
 			blue *= 255.0;
 
 			cout << red << ", " << green << ", " << blue << endl;
+*/
+			m[i] = Scalar(c.getBlue(), c.getGreen(), c.getRed());
 
-			m[i] = Scalar((uint32_t)blue, (uint32_t)green, (uint32_t)red);
-
-/*
-			if(s.isDefect())
+			if(c.getAlpha() > 3000)
 			{
 				ostringstream t;
 				t << "DEFECT";
 				putText(m[i], t.str(), Point(20,40), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 255, 0), 1, CV_AA);
 			}
-*/
-			cout << c << endl;//"\t";
+			
+			cout << c << "\t";
 		}
+
 		cout << endl;
 
 		m[0].copyTo(result(Rect(0, 0, m[0].cols, m[0].rows)));
